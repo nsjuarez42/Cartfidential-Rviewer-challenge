@@ -1,5 +1,5 @@
 
 interface IDatabase{
-    readDb() : any
-    writeDb(data:any) : boolean
+     readDb() : any
+     writeDb(data:any) : boolean
 }

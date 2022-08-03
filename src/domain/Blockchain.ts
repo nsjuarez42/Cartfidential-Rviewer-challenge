@@ -40,3 +40,5 @@ class Blockchain implements IBlockchain{
     }
     
 }
+
+export {Blockchain}
