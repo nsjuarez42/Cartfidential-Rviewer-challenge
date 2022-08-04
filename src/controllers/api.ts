@@ -1,5 +1,5 @@
 import { Application, Request, Response } from 'express';
-import {getCartByIdService, patchCartByIdService, postCartByIdService} from '../services/cartService'
+import {deleteCartByIdService, getCartByIdService, patchCartByIdService, postCartByIdService} from '../services/cartService'
 
 import { PingService } from "../services/ping-service";
 
@@ -67,7 +67,7 @@ async function patchCartById(req:Request,res:Response){
  const {id} = req.params
  const {items} = req.body
 
- const cart = patchCartById(id,items)
+ const cart = patchCartByIdService(id,items)
 
  if(cart == undefined){
     res.status(404).send({error:"Cart not found"})
@@ -77,6 +77,17 @@ async function patchCartById(req:Request,res:Response){
 }
 
 async function deleteCartById(req:Request,res:Response){
+
+   if(!req.params.id){
+      res.status(404).send({error:"Cart not found for the given id"})
+   }
+
+   const {id} = req.params
+
+   const cart = deleteCartByIdService(id)
+
+   cart ? res.status(200).send({msg:"Cart deleted successfully"}) :
+   res.status(404).send({error:"Cart not found for the given id"})
 
 }
 

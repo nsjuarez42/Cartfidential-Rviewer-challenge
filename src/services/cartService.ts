@@ -2,7 +2,6 @@ import {Block} from '../domain/Block'
 import {Blockchain} from '../domain/Blockchain'
 import { Cart } from "../domain/Cart";
 import { CartItem } from "../domain/CartItem";
-import { EnumStringMember } from '@babel/types';
 import { Fsdatabase } from '../model/fsDatabase'
 
 function getCartByIdService(id:string) : Cart | undefined{
@@ -38,10 +37,6 @@ function postCartByIdService(id:string,items:CartItem[]) : Cart | undefined{
         data = new Blockchain(blockchain.blockchain)
     }
 
-    console.log(data)
-    console.log(id)
-    console.log(items)
-
     for(let i=0;i<data.blockchain.length;i++){
       if(data.blockchain[i].data.id == id){
           return undefined
@@ -50,7 +45,7 @@ function postCartByIdService(id:string,items:CartItem[]) : Cart | undefined{
 
     const cart = new Cart(items,id)
 
-    const block = new Block(Date.now(),data.blockchain[data.blockchain.length-1].hash,cart,undefined,2)
+    const block = new Block(Date.now(),data.blockchain[data.blockchain.length-1].hash,cart,undefined,undefined)
 
     data.addBlock(block)
 
@@ -69,8 +64,55 @@ function patchCartByIdService(id:string,items:CartItem[]) : Cart | undefined{
         data = new Blockchain(blockchain.blockchain)
     }
 
-    
+    let i=0
+    var cartFound =false
+    while(i<data.blockchain.length && !cartFound){
+      if(data.blockchain[i].data.id == id){
+         cartFound = true 
+      }
+    }
+    if(cartFound){
+        const cart = new Cart(items,id)
 
-    return undefined
+        const block = new Block(Date.now(),data.blockchain[data.blockchain.length-1].hash,cart,undefined,undefined)
+    
+        data.addBlock(block)
+    
+        Fsdatabase.writeDb(data)
+    
+        return cart
+    }else{
+           return undefined
+    }
 }
-export {postCartByIdService,getCartByIdService,patchCartByIdService}
+
+function deleteCartByIdService(id:string) : boolean {
+ let data = Fsdatabase.readDb()
+
+ if(Object.keys(data).length==0){
+    const blockchain = new Blockchain()
+    Fsdatabase.writeDb(blockchain)
+    data = new Blockchain(blockchain.blockchain)
+ }
+
+ let i=0
+ var cartFound =false
+ while(i<data.blockchain.length && !cartFound){
+   if(data.blockchain[i].data.id == id){
+      cartFound = true 
+   }
+ }
+
+ if(cartFound){
+
+     const block = new Block(Date.now(),data.blockchain[data.blockchain.length-1].hash,undefined,undefined,undefined)
+ 
+     data.addBlock(block)
+ 
+     Fsdatabase.writeDb(data)
+ }
+
+ return cartFound
+
+}
+export {postCartByIdService,getCartByIdService,patchCartByIdService,deleteCartByIdService}
