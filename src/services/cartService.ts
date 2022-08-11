@@ -18,6 +18,10 @@ function getCartByIdService(id:string) : Cart | undefined{
 
     console.log(data)
 
+    if(id == ''){
+        return undefined
+    }
+
     for(let i=0;i<data.blockchain.length;i++){
         if(data.blockchain[i].data.id == id){
          return data.blockchain[i].data
@@ -40,7 +44,7 @@ function postCartByIdService(id:string,items:CartItem[]) : Cart | undefined{
     for(let i=0;i<data.blockchain.length;i++){
       if(data.blockchain[i].data.id == id){
           return undefined
-      }
+      } 
     }
 
     const cart = new Cart(items,id)

@@ -23,9 +23,6 @@ class Block implements IBlock{
      const data = "b8958fa52c34d3f9421ad5f19125ecd0d7a9004d7fc318cd8fe8f15bbe12159495e7e27be52e0e87cd81463f29a2c0"
      const lastHashData =timestamp + nonce + data
      const lastHash = crypto.createHash('sha256').update(lastHashData).digest('hex')
-   //const hashData = timestamp + nonce + data + lastHash
-   //const hash =crypto.createHash('sha256').update(hashData).digest('hex')
-
      return new Block(timestamp,lastHash,data,undefined,nonce)
     }
 

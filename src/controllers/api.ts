@@ -3,9 +3,6 @@ import {deleteCartByIdService, getCartByIdService, patchCartByIdService, postCar
 
 import { PingService } from "../services/ping-service";
 
-//import {getCartByIdService} from '../services/cartService'
-
-
 function checkId(id:any){
    if(!id){
     
@@ -24,7 +21,7 @@ async function getCartById(req:Request,res:Response){
  if(cart == undefined){
     res.status(404).send({error:"Cart not found for the given id"})
  }else{
-    res.status(200).send(cart)
+    res.status(200).send({items:cart.items})
  }
 } 
 
@@ -35,8 +32,6 @@ async function postCartById(req:Request,res:Response){
   
    const {id} = req.params
    const {items} = req.body
-   console.log(id,items)
-  //check that items is an array of cartItem
 
    const cart = postCartByIdService(id,items)
 
@@ -45,20 +40,10 @@ async function postCartById(req:Request,res:Response){
    }else{
       res.status(201).send({msg:"Cart created successfully"})
    }
-
-  /*
-  201 created
-  400 invalid body provided
-  409 already exists
-  */
-  
   
 }
 
 async function patchCartById(req:Request,res:Response){
-//200 created
-//400 invalid body
-//404 not found
 
  if(!req.params.id || !req.body.items){
    res.status(400).send({error:"Invalid body provided"})
@@ -84,10 +69,13 @@ async function deleteCartById(req:Request,res:Response){
 
    const {id} = req.params
 
-   const cart = deleteCartByIdService(id)
-
-   cart ? res.status(200).send({msg:"Cart deleted successfully"}) :
-   res.status(404).send({error:"Cart not found for the given id"})
+   const cartDeleted = deleteCartByIdService(id)
+ 
+   if(cartDeleted){
+      res.status(200).send({msg:"Cart deleted successfully"})
+   }else{
+      res.status(404).send({error:"Cart not found for the given id"})
+   }
 
 }
 
