@@ -14,10 +14,9 @@ describe('GET /ping', () => {
 
 describe('GET /carts/{id}',()=>{
     //200
-    it('should return 200 and an object',async()=>{
+    it('should return 200',async()=>{
       const req = await request(app).get('/carts/123')
       expect(req.statusCode).toEqual(200)
-      expect(req.body).toBeInstanceOf('object')
     })
      //404
     it('should return 404 and an object with error property',async()=>{

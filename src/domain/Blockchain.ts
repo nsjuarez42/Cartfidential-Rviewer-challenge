@@ -2,10 +2,6 @@ import { Block } from "./Block";
 import { IBlockchain } from "./IBlockchain";
 
 class Blockchain implements IBlockchain {
-  /*TODO:
-    replace implementation
-    replace and is valid use in blockchain
-    */
 
   blockchain: Block[];
 
@@ -24,7 +20,13 @@ class Blockchain implements IBlockchain {
   }
   /** The new blockchain that is a candidate for replacing the current blockchain */
   replace(blockchain: IBlockchain): boolean {
-    throw new Error("Method not implemented.");
+    const lastBlock = this.blockchain[this.blockchain.length-1]
+    const blockchainContainsLastBlock =blockchain.blockchain.find(el=>{el.hash === lastBlock.hash})
+    if(blockchainContainsLastBlock && blockchain.isValid(blockchain)){
+      this.blockchain = blockchain.blockchain
+      return true
+    }
+    return false
   }
   /**
    * Validates the chain by checking if:

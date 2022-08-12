@@ -3,12 +3,6 @@ import {deleteCartByIdService, getCartByIdService, patchCartByIdService, postCar
 
 import { PingService } from "../services/ping-service";
 
-function checkId(id:any){
-   if(!id){
-    
-   }
-}
-
 async function getCartById(req:Request,res:Response){
  if(!req.params.id){
     res.status(404).send({error:"Cart not found for the given id"})
